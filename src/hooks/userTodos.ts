@@ -3,9 +3,6 @@ import { useState, useEffect } from "react";
 import { saveTodosToStorage, getTodosFromStorage } from "@/utils/storage";
 
 
-
-
-
 export function userTodos() {
     const [todos, setTodos] = useState<Todo[]>([]);
 
@@ -40,6 +37,10 @@ export function userTodos() {
         setTodos([])
     };
 
+    const updateTodo =(id:number,newText:string)=>{
+        console.log('updateTodo',id,newText);
+        setTodos(prev => prev.map(todo => todo.id===id? {...todo,text:newText}:todo))
+    }
 
-    return { todos, addTodo, toggleTodo, deleteTodo, clearAll };
+    return {todos,addTodo,toggleTodo,deleteTodo,clearAll,updateTodo}
 }
