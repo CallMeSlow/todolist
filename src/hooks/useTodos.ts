@@ -1,10 +1,13 @@
 import type { Todo } from "@/types/todo";
 import { useEffect, useMemo, useState } from "react";
+import { useTodosApi } from "@/hooks/useTodoApi";
 import { useStorageState } from "@/hooks/useStorageState";
 
 export function useTodos() {
 
     const [todos, setTodos] = useState<Todo[]>([])
+
+    const { getTodos, addTodo: apiAdd, deleteTodo: apiDelete, updateTodo: apiUpdate, toggleTodo: apiToggle, clearAll: apiClear } = useTodosApi()
 
     useEffect(() => {
         fetch("/api/todos")
@@ -25,18 +28,7 @@ export function useTodos() {
 
 
     const addTodo = async (text: string) => {
-        const res = await fetch("/api/todos", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text }),
-        });
-
-        if (!res.ok) {
-            console.error("添加todo失败", res.statusText);
-            return;
-        }
-
-        const newTodo: Todo = await res.json();
+        const newTodo = await apiAdd(text)
 
         setTodos(prev => [...prev, newTodo])
     }
@@ -49,29 +41,10 @@ export function useTodos() {
 
 
     const toggleTodo = async (id: number) => {
-        try {
-            const res = await fetch("api/todos", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id }),
-            });
-
-            if (!res.ok) {
-                console.log("更新已完成失败");
-                return;
-            }
-
-            const updatedTodo = await res.json();
-
-            setTodos(prev =>
-                prev.map(todo => todo.id === id ? updatedTodo : todo)
-            );
-
-        } catch (error) {
-            console.log("网络错误：", error);
-        }
-
-
+        const updatedTodo = await apiToggle(id)
+        setTodos(prev =>
+            prev.map(todo => todo.id === id ? updatedTodo : todo)
+        );
     }
 
 
@@ -81,25 +54,10 @@ export function useTodos() {
     // };
 
     const deleteTodo = async (id: number) => {
-        try {
-            const res = await fetch("api/todos", {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id }),
-            });
-
-            if (!res.ok) {
-                console.error("删除失败");
-                return;
-            }
-
-            setTodos((prev) => {
-                return prev.filter(todo => todo.id !== id)
-            });
-
-        } catch (error) {
-            console.error("网络错误：", error);
-        }
+        await apiDelete(id)
+        setTodos((prev) => {
+            return prev.filter(todo => todo.id !== id)
+        });
     }
 
     // const clearAll = () => {
@@ -107,20 +65,8 @@ export function useTodos() {
     // };
 
     const clearAll = async () => {
-        try {
-            const res = await fetch("api/todos?all=true", {
-                method: "DELETE",
-            });
-
-            if (!res.ok) {
-                console.log("清空失败");
-                return;
-            }
-            setTodos([])
-        } catch (error) {
-            console.log("网络错误")
-        }
-
+        await apiClear()
+        setTodos([])
     }
 
 
@@ -132,32 +78,10 @@ export function useTodos() {
 
 
     const updateTodo = async (id: number, newText: string) => {
-        console.log("更新值为：",newText)
-        const updateTodo = todos.find(todo => todo.id == id)
-        if (updateTodo == undefined) {
-            return;
-        }
-
-        try {
-            const res = await fetch("api/todos", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({id,text:newText })
-            })
-
-            if (!res.ok) {
-                console.log("更新失败")
-                return;
-            }
-           
-            setTodos((prev) => {
-                return prev.map(todo => todo.id === id ? { ...todo, text: newText } : todo)
-            });
-
-        } catch (error) {
-            console.log("网络错误")
-        }
-
+        await apiUpdate(id, newText)
+        setTodos((prev) => {
+            return prev.map(todo => todo.id === id ? { ...todo, text: newText } : todo)
+        });
     }
 
 
