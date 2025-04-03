@@ -2,6 +2,8 @@ import React, { useState } from "react";
 
 import type { Todo } from "@/types/todo"
 
+import styles from "./TodoItem.module.css";
+
 type TodoItemProps = {
     todo: Todo;
     onToggle: (id: number) => void;
@@ -31,11 +33,12 @@ export default function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoIte
 
 
     return (
-        <li>
+        <li className={styles.TodoItem}>
             <input type="checkbox" checked={todo.completed} onChange={() => onToggle(todo.id)}></input>
 
             {isEditing ? (
                 <input
+                className={styles.editInput}
                     value={editValue}
                     onChange={(e) => setEditValue(e.target.value)}
                     onKeyDown={handleKeyDown}
@@ -43,12 +46,12 @@ export default function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoIte
                     autoFocus
                 />
             ) : (
-                <span onDoubleClick={() => setIsEditing(true)} style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+                <span className={`${styles.todoContent} ${todo.completed? styles.completed: ''}`} onDoubleClick={() => setIsEditing(true)}>
                     {todo.text}
                 </span>
             )
             }
-            <button onClick={() => onDelete(todo.id)}>删除</button>
+            <button className={styles.deleteButton} onClick={() => onDelete(todo.id)}>删除</button>
         </li>
     )
 }

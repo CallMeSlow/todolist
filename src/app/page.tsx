@@ -1,17 +1,25 @@
 "use client"
 
 import React, { useState, useEffect } from "react";
-import TodoItem from "@/components/TodoItem"
-import { userTodos } from "@/hooks/userTodos";
-import { userTodoInput } from "@/hooks/userTodoInput"
+import TodoItem from "@/components/TodoItem";
+import { useTodoInput } from "@/hooks/useTodoInput";
+import TodoStats from "@/components/TodoStats";
+import { TodoProvider, useTodoContext } from "@/context/TodoContext";
+import { CounterProvider } from "@/context/CounterContext";
+import { CounterStatus } from "@/components/CounterStatus";
+import { AddCount } from "@/components/AddCoun";
+import styles from "./page.module.css";
 
+
+// 为userTodoInput的返回值定义接口
+interface TodoInput {
+  inputValue: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  clearInput: () => void;
+}
 
 export default function Home() {
-
-  const userTodo = userTodos();
-
-  const input = userTodoInput("")
-
+  const input = useTodoInput("")
   const [hasMounted, setHasMounted] = useState(false)
 
   useEffect(() => {
@@ -20,24 +28,51 @@ export default function Home() {
 
   if (!hasMounted) return null;
 
+  return (
+
+    <main className={styles.container}>
+      <TodoProvider>
+        <HomeContent input={input} />
+      </TodoProvider>
+    </main>
+
+  );
+}
+
+function HomeContent({ input }: { input: TodoInput }) {
+  const { todos, addTodo, toggleTodo, deleteTodo, updateTodo, clearAll } = useTodoContext();
 
   return (
-    <main style={{ padding: '20px' }}>
-      <h1>我的待办事项</h1>
-      <button onClick={userTodo.clearAll} style={{ marginRight: '10px' }}>清空所有</button>
+    <div style={{ padding: '20px' }}>
+      <h1 className={styles.title}>我的待办事项</h1>
 
-      <input type="text" value={input.inputValue} onChange={input.onChange} placeholder="添加新的待办任务" />
-      <button onClick={() => {
-        userTodo.addTodo(input.inputValue)
-        input.clearInput()
-      }}>添加</button>
+      <TodoStats />
+
+      <div className={styles.inputRow}>
+        <button className={styles.clearButton} onClick={clearAll}>清空所有</button>
+
+        <input className={styles.input} type="text" value={input.inputValue} onChange={input.onChange} placeholder="添加新的待办任务" />
+        <button className={styles.button} onClick={() => {
+          addTodo(input.inputValue)
+          input.clearInput()
+        }}>添加</button>
+
+      </div>
+
+
+
+
       <ul>
-        {userTodo.todos.map(todo => {
-          return <TodoItem key={todo.id} todo={todo} onToggle={() => userTodo.toggleTodo(todo.id)} onDelete={() => userTodo.deleteTodo(todo.id)} onUpdate={userTodo.updateTodo} />
-        })
-        }
+        {todos.map(todo => (
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onToggle={() => toggleTodo(todo.id)}
+            onDelete={() => deleteTodo(todo.id)}
+            onUpdate={updateTodo}
+          />
+        ))}
       </ul>
-
-    </main>
+    </div>
   );
 }
