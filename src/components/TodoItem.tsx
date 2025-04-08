@@ -14,7 +14,7 @@ type TodoItemProps = {
 
 export default function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) {
     const [isEditing, setIsEditing] = useState(false);
-    const [editValue, setEditValue] = useState<string>(todo.text);
+    const [editValue, setEditValue] = useState<string>(todo.content);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -25,8 +25,8 @@ export default function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoIte
             setIsEditing(false);
         } else if (e.key === 'Escape') {
             console.log('editValue', editValue);
-            console.log('editValue', todo.text);
-            setEditValue(todo.text);
+            console.log('editValue', todo.content);
+            setEditValue(todo.content);
             setIsEditing(false);
         }
     };
@@ -47,7 +47,7 @@ export default function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoIte
                 />
             ) : (
                 <span className={`${styles.todoContent} ${todo.completed? styles.completed: ''}`} onDoubleClick={() => setIsEditing(true)}>
-                    {todo.text}
+                    {todo.content}
                 </span>
             )
             }

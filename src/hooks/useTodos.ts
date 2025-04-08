@@ -29,7 +29,7 @@ export function useTodos() {
 
     const addTodo = async (text: string) => {
         const newTodo = await apiAdd(text)
-
+        console.log("newTodo is :" ,JSON.stringify(newTodo))
         setTodos(prev => [...prev, newTodo])
     }
 
@@ -41,7 +41,7 @@ export function useTodos() {
 
 
     const toggleTodo = async (id: number) => {
-        const updatedTodo = await apiToggle(id)
+        const updatedTodo = await apiToggle(id,!todos.find(todo=> todo.id===id)?.completed)
         setTodos(prev =>
             prev.map(todo => todo.id === id ? updatedTodo : todo)
         );
@@ -78,9 +78,9 @@ export function useTodos() {
 
 
     const updateTodo = async (id: number, newText: string) => {
-        await apiUpdate(id, newText)
+        const updated = await apiUpdate(id, newText)
         setTodos((prev) => {
-            return prev.map(todo => todo.id === id ? { ...todo, text: newText } : todo)
+            return prev.map(todo => todo.id === id ? updated: todo)
         });
     }
 
