@@ -9,6 +9,7 @@ import { CounterProvider } from "@/context/CounterContext";
 import { CounterStatus } from "@/components/CounterStatus";
 import { AddCount } from "@/components/AddCoun";
 import styles from "./page.module.css";
+import { AnimatePresence } from 'framer-motion';
 
 
 // 为userTodoInput的返回值定义接口
@@ -60,18 +61,18 @@ function HomeContent({ input }: { input: TodoInput }) {
       </div>
 
 
-
-
       <ul>
-        {todos.map(todo => (
-          <TodoItem
-            key={todo.id}
-            todo={todo}
-            onToggle={() => toggleTodo(todo.id)}
-            onDelete={() => deleteTodo(todo.id)}
-            onUpdate={updateTodo}
-          />
-        ))}
+        <AnimatePresence>
+          {todos.map(todo => (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              onToggle={() => toggleTodo(todo.id)}
+              onDelete={() => deleteTodo(todo.id)}
+              onUpdate={updateTodo}
+            />
+          ))}
+        </AnimatePresence>
       </ul>
     </div>
   );

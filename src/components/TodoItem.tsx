@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import type { Todo } from "@/types/todo"
 
 import styles from "./TodoItem.module.css";
+import { motion } from "framer-motion"
 
 type TodoItemProps = {
     todo: Todo;
@@ -33,12 +34,20 @@ export default function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoIte
 
 
     return (
-        <li className={styles.TodoItem}>
+        <motion.li
+            className={styles.TodoItem}
+            layout
+            whileTap={{scale:0.95}}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.25 }}
+        >
             <input type="checkbox" checked={todo.completed} onChange={() => onToggle(todo.id)}></input>
 
             {isEditing ? (
                 <input
-                className={styles.editInput}
+                    className={styles.editInput}
                     value={editValue}
                     onChange={(e) => setEditValue(e.target.value)}
                     onKeyDown={handleKeyDown}
@@ -46,12 +55,12 @@ export default function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoIte
                     autoFocus
                 />
             ) : (
-                <span className={`${styles.todoContent} ${todo.completed? styles.completed: ''}`} onDoubleClick={() => setIsEditing(true)}>
+                <span className={`${styles.todoContent} ${todo.completed ? styles.completed : ''}`} onDoubleClick={() => setIsEditing(true)}>
                     {todo.content}
                 </span>
             )
             }
             <button className={styles.deleteButton} onClick={() => onDelete(todo.id)}>删除</button>
-        </li>
+        </motion.li>
     )
 }
