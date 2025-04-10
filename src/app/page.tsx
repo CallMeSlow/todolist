@@ -46,7 +46,7 @@ function HomeContent({ input }: { input: TodoInput }) {
   return (
     <div style={{ padding: '20px' }}>
       <h1 className={styles.title}>我的待办事项</h1>
-
+      
       <TodoStats />
 
       <div className={styles.inputRow}>
@@ -63,7 +63,12 @@ function HomeContent({ input }: { input: TodoInput }) {
 
       <ul>
         <AnimatePresence>
-          {todos.map(todo => (
+          {todos.length===0?(
+            <div className={styles.emptyState}>
+              <img src= "images/empty.svg" alt = "暂无任务" className={styles.emptyImage}/>
+              <p className={styles.empytText} >当前没有待办的任务，去做点喜欢的事吧 ☕</p>
+            </div>
+          ):todos.map(todo => (
             <TodoItem
               key={todo.id}
               todo={todo}

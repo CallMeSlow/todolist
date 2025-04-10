@@ -1,57 +1,97 @@
-.container{
-    max-width:600px;
-    margin:40px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius:12px;
-    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+.container {
+    max-width: 680px;
+    margin: 60px auto;
+    padding: 32px 24px;
+    background: linear-gradient(to bottom right, #f9fbfc, #eef4f8);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease-in-out;
 }
 
-.title{
+.title {
     font-size: 28px;
-    font-weight:bold;
-    margin-bottom:12px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text-color);
 }
 
-.inputRow{
-    display:flex;
-    gap:8px;
-    margin-bottom:20px;
+.inputRow {
+    display: flex;
+    gap: 12px;
     align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
-.input{
-    flex:1;
-    padding:10px;
-    font-size:14px;
+.input {
+    flex: 1;
+    padding: 12px 16px;
+    font-size: 15px;
     border: 1px solid #ccc;
-    border-radius:6px;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
 }
 
-.button{
-    padding:10px 14px;
-    background-color:#4caf50;
-    color:white;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    transition: background-color 0.2s ease;
+.input:focus {
+    border-color: #4caf50
 }
 
-.button:hover{
-    background-color: #45a047
+.button {
+    padding: 10px 14px;
+    background: var(--primary-gradient);
+    color: white;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: var(--box-shadow);
 }
 
-.clearButton{
-    margin-right:10px;
-    padding:10px 16px;
+.button:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+}
+
+.clearButton {
+
+    padding: 10px 20px;
     border: 1px solid #999;
-    background-color: white;
-    border-radius:6px;
-    cursor:pointer;
-    transition: all 0.2s ease;
+    background: var(--secondary-bg);
+    color: var(--text-color);
+    font-weight: 500;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.clearButton:hover{
-    background-color: #fff5f5f5;
+.clearButton:hover {
+    background-color: #f1f5f9;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 40px 20px;
+    opacity: 0.8;
+}
+
+.emptyImage {
+    width: 180px;
+    height: auto;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.emptyText {
+    font-size: 16px;
+    color: var(--text-muted);
 }
